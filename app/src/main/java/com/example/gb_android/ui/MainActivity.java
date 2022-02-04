@@ -59,12 +59,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         storage = new ThemeStorage(this);
 
         settingsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
+                assert result.getData() != null;
                 Theme theme = (Theme) result.getData().getSerializableExtra(SelectThemeActivity.THEME_RESULT);
 
                 storage.saveTheme(theme);
@@ -76,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
         setTheme(storage.getTheme().getStyle());
 
         setContentView(R.layout.activity_main);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("themes", Context.MODE_PRIVATE);
 
         init();
 

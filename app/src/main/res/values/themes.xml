@@ -17,7 +17,7 @@
         <item name="textColorForOperationView">@color/black</item>
     </style>
 
-    <style name="Theme.GB_Android.Dark" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.GB_Android_Dark" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/grey</item>
         <item name="colorPrimaryVariant">@color/black</item>
