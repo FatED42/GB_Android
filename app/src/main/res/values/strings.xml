@@ -18,4 +18,7 @@
     <string name="button_dot" translatable="false">.</string>
     <string name="button_zero" translatable="false">0</string>
     <string name="button_equal" translatable="false">=</string>
+    <string name="light_theme">Light theme</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="settings">Settings</string>
 </resources>

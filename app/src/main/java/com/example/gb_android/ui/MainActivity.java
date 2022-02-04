@@ -1,12 +1,26 @@
-package com.example.gb_android;
+package com.example.gb_android.ui;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.gb_android.DataAndOperations;
+import com.example.gb_android.R;
+import com.example.gb_android.domain.Theme;
+import com.example.gb_android.storage.ThemeStorage;
 import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,11 +53,31 @@ public class MainActivity extends AppCompatActivity {
     private static final String ARG_TEXT_OP = "ARG_TEXT_OP";
 
     private DataAndOperations dataAndOperations;
+    private ThemeStorage storage;
+    private ActivityResultLauncher<Intent> settingsLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        storage = new ThemeStorage(this);
+
+        settingsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Theme theme = (Theme) result.getData().getSerializableExtra(SelectThemeActivity.THEME_RESULT);
+
+                storage.saveTheme(theme);
+
+                recreate();
+            }
+        });
+
+        setTheme(storage.getTheme().getStyle());
+
+        setContentView(R.layout.activity_main);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("themes", Context.MODE_PRIVATE);
 
         init();
 
@@ -196,6 +230,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        settingsLauncher.launch(SelectThemeActivity.intent(MainActivity.this, storage.getTheme()));
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void init() {
